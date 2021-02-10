@@ -6,15 +6,21 @@ import perceptronnetwerk as pn
 class MyTestCase(unittest.TestCase):
 
     def test_Invert(self):
+        """Hier word de NOT getest met 1 input"""
+
+        # Perceptron word aangemaakt
         Not = p.Perceptron(weights=[-1], bias=0, trashhold=-0.5)
 
         antwoorden = []
+        # Alle mogelijkheden worden getest op de perceptron
         for verschillendeInputs in range(2):
             antwoorden.append(Not.output([verschillendeInputs]))
 
         self.assertEqual(antwoorden, [1, 0])
 
     def test_And(self):
+        """Hier word de AND getest met 2 inputs"""
+
         And = p.Perceptron(weights=[0.5, 0.5], bias=0, trashhold=1)
 
         antwoorden = []
@@ -25,6 +31,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(antwoorden, [0, 0, 0, 1])
 
     def test_Or(self):
+        """Hier word de OR getest met 2 inputs"""
+
         Or = p.Perceptron(weights=[0.5, 0.5], bias=0, trashhold=0.5)
 
         antwoorden = []
@@ -35,6 +43,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(antwoorden, [0, 1, 1, 1])
 
     def test_Nor(self):
+        """Hier word de NOR getest met 3 inputs met 3 inputs"""
+
         Nor = p.Perceptron(weights=[-1, -1, -1], bias=0, trashhold=0)
 
         antwoorden = []
@@ -46,6 +56,8 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(antwoorden, [1, 0, 0, 0, 0, 0, 0, 0])\
 
     def test_Party(self):
+        """Hier word de party uit de reader getest met 3 inputs"""
+
         Party = p.Perceptron(weights=[0.6, 0.3, 0.2], bias=0, trashhold=0.4)
 
         antwoorden = []
@@ -57,18 +69,26 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(antwoorden, [0, 0, 0, 1, 1, 1, 1, 1])
 
     def test_Xor(self):
+        """Hier word de XOR getest met 2 layers en in totaal 3 perceptrons"""
+
+        # Perceptrons worden aangemaakt
         perceptron1 = p.Perceptron([1, 1], 0, 1)
         perceptron2 = p.Perceptron([-1, -1], 0, -1.5)
 
+        # Layer word aangemaakt en perceptrons worden toegevoegd aan layer
         layer1 = pl.PerceptronLayer([perceptron1, perceptron2])
 
+        # Perceptron worden aangemaakt
         perceptron3 = p.Perceptron([1, 1], 0, 2)
 
+        # Layer word aangemaakt en percepotron word toegevoegd aan layer
         layer2 = pl.PerceptronLayer([perceptron3])
 
+        # Netwerk word aangemaakt en layers worden toegevoegd aan netwerk
         Xor = pn.PerceptronNetwerk([layer1, layer2])
 
         antwoorden = []
+
         for verschillendeInputs1 in range(2):
             for verschillendeInputs2 in range(2):
                 antwoorden.append(Xor.feed_forward([verschillendeInputs1, verschillendeInputs2]))
@@ -76,6 +96,9 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(antwoorden, [[0], [1], [1], [0]])
 
     def test_halfAdder(self):
+        """Hier word de half Adder getest met 2 layers en in totaal 5 perceptrons
+            (Hier word vrijwel hezelfde gedaan als bij de XOR maar met 2 extra perceptrons)"""
+
         perceptron1 = p.Perceptron([1, 1], 0, 1)
         perceptron2 = p.Perceptron([-1, -1], 0, -1.5)
         perceptron3 = p.Perceptron([1, 1], 0, 2)
