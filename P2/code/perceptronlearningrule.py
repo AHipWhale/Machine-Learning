@@ -32,7 +32,10 @@ class PerceptronLearningRule:
 
     def error(self):
         """Deze functie returnt de MSE van deze perceptron"""
-        return (sum(self.errorList)**2) / len(self.errorList)
+        errorKwadraat = []
+        for error in self.errorList:
+            errorKwadraat.append(error ** 2)
+        return sum(errorKwadraat) / len(self.errorList)
 
     def activation_function(self, invoer: [float]):
         """Deze functie berekent de som van de inputs met we weights en telt daarbij de bias op"""
