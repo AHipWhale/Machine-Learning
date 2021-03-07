@@ -15,7 +15,7 @@ class Neuron:
         return self.sumInvoer
 
     def activation_function(self, invoer: [float]):
-        """Deze functie berekent de sigmoid en returnt dat de output"""
+        """Deze functie berekent de sigmoid en returnt dat als output"""
         return 1/(1+math.exp(-self.calculate_input(invoer)))
 
     def __str__(self):

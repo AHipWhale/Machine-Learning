@@ -13,5 +13,5 @@ class NeuronNetwerk:
         return volgendeInput
 
     def __str__(self):
-        """Deze functie returnt de belangrijke informatie van de neuron"""
+        """Deze functie returnt de belangrijke informatie van het neuron netwerk"""
         return "Dit netwerk heeft %s layers en de output van dit netwerk is %s" % (self.layers, self.output)
