@@ -10,12 +10,12 @@ class PerceptronLearningRule:
     def update(self, invoer, target):
         """Paste de learning rule toe zodat perceptron een bepaalde functie, zoals AND, kan leren"""
         # Deze if-statement kijkt of het nodig is om de weights en bias te veranderen, want als de output klopt is dat niet nodig
-        if self.activation_function(invoer) == target:
+        if self.calculate_input(invoer) == target:
             self.correct += 1
         else:
             self.target = target
             # berekent de error
-            error = target - self.activation_function(invoer)
+            error = target - self.calculate_input(invoer)
 
             for i in range(len(invoer)):
                 # berekent de nieuwe weights
@@ -37,7 +37,7 @@ class PerceptronLearningRule:
             errorKwadraat.append(error ** 2)
         return sum(errorKwadraat) / len(self.errorList)
 
-    def activation_function(self, invoer: [float]):
+    def calculate_input(self, invoer: [float]):
         """Deze functie berekent de som van de inputs met we weights en telt daarbij de bias op"""
         self.invoer = invoer
         self.sumInvoer = 0
@@ -46,11 +46,11 @@ class PerceptronLearningRule:
             self.sumInvoer += invoer[index] * self.weights[index]
         self.sumInvoer += self.bias
         # sumInvoer word 0 of 1
-        self.sumInvoer = self.output()
+        self.sumInvoer = self.activation_function()
 
         return self.sumInvoer
 
-    def output(self):
+    def activation_function(self):
         """Deze functie kijkt of de som van de inputs*weights+bias hoger of lager is dan de 0 en returnt dan de output"""
         if self.sumInvoer >= 0:
             return 1
