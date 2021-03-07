@@ -9,7 +9,7 @@ class NeuronLayer:
         outputs = []
         self.input = input
         for neuron in self.neuron:
-            outputs.append(neuron.output(input))
+            outputs.append(round(neuron.activation_function(input)))
         self.output = outputs
         return outputs
 
