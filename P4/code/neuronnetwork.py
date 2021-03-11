@@ -40,8 +40,8 @@ class NeuronNetwerk:
         outputs = self.layers[-1].output
 
         for i in range(len(outputs)):
-            loss += 0.5 * (targets[i] - outputs[i])**2
-        self.netwerkError = loss
+            loss += (targets[i] - outputs[i])**2
+        self.netwerkError = loss / len(outputs)
         print(loss)
 
     def train(self, inputs: list, targets: list):
