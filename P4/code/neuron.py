@@ -6,11 +6,16 @@ class Neuron:
         self.weights = weights
         self.sumInvoer = None
         self.aanpassingWeights = []
+        self.aanpassingBias = None
         self.learning_rate = learning_rate
+        self.error = None
+        self.output = None
+        self.invoer = None
 
     def calculate_input(self, invoer: [float]):
         """Deze functie berekent de som van de inputs met we weights en telt daarbij de bias op"""
         self.sumInvoer = 0
+        self.invoer = invoer
         for index in range(len(self.weights)):
             self.sumInvoer += invoer[index] * self.weights[index]
         self.sumInvoer += self.bias
@@ -18,37 +23,55 @@ class Neuron:
 
     def activation_function(self, invoer: [float]):
         """Deze functie berekent de sigmoid en returnt dat als output"""
-        return 1/(1+math.exp(-self.calculate_input(invoer)))
+        self.output = 1/(1+math.exp(-self.calculate_input(invoer)))
+        return self.output
 
-    def calculate_error(self, invoer: [float], target):
-        output = self.activation_function(invoer)
-        afgeleide = output * (1 - output)
-        return afgeleide * -(target - output)
+    def calculate_error_outputNeuron(self, target):
+        # print('output', self.output)
+        afgeleide = self.output * (1 - self.output)
+        # print("afgeleide", afgeleide)
+        self.error = afgeleide * -(target - self.output)
+        # print("error", self.error)
+        return self.error
 
-    def calculate_gradient(self, output, invoer: [float], target):
-        return output * self.calculate_error(invoer, target)
+    def calculate_error_hiddenNeuron(self, volgendeWeights, volgendeError):
+        sumError = 0
+        # print("nextWeights", volgendeWeights)
+        # print("nextError", volgendeError)
+        for i in range(len(volgendeWeights)):
+            sumError += volgendeWeights[i] * volgendeError[i]
+        # print("sumError", sumError)
+        # print("output", self.output)
+        afgeleide = self.output * (1 - self.output)
+        self.error = afgeleide * sumError
+        # print("error", self.error)
+        return self.error
 
-    def calculate_deltaWeights(self,invoer: [float], target):
+    def calculate_gradient(self, delta):
+        return self.output * delta
+
+    def calculate_deltaWeights(self):
         for i in range(len(self.weights)):
-            self.aanpassingWeights.append(self.learning_rate * self.calculate_error(invoer, target) * invoer[i])
+            self.aanpassingWeights.append(self.learning_rate * self.invoer[i] * self.error)
 
-    def calculate_deltaBias(self, invoer: [float], target):
-        return self.learning_rate * self.calculate_error(invoer, target)
+    def calculate_deltaBias(self):
+        self.aanpassingBias = self.learning_rate * self.error
+        return self.aanpassingBias
 
-    def update(self, invoer: [float], target):
-        self.calculate_deltaWeights(invoer, target)
+    def update(self):
+        self.aanpassingWeights = []
+        # print("NEURON", self.__str__())
+        self.calculate_deltaWeights()
+        # print("\ndeltaWeights", self.aanpassingWeights)
         for i in range(len(self.aanpassingWeights)):
+            # print(self.weights[i], self.aanpassingWeights[i])
             self.weights[i] -= self.aanpassingWeights[i]
-
-        self.bias -= self.calculate_deltaBias(invoer, target)
+            #self.weights[i] -= learning_rate * self.aanpassingWeights[i]
+            # print("newWeights", self.weights[i])
+        self.bias -= self.calculate_deltaBias()
+        # print("newBias", self.bias, "\n")
 
     def __str__(self):
         """Deze functie returnt de belangrijke informatie van de neuron"""
         return "De weights waren %s en een bias van %s. De output van de neuron was %s" % \
-               (self.weights, self.bias, self.sumInvoer)
-
-n1 = Neuron([-0.5, 0.5], 1.5, 1)
-
-n1.update([0,0], 0)
-
-print(n1)
+               (self.weights, self.bias, self.output)
