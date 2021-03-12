@@ -27,49 +27,41 @@ class Neuron:
         return self.output
 
     def calculate_error_outputNeuron(self, target):
-        # print('output', self.output)
+        """Deze functie berekent de error van de neuronen in de output layer"""
         afgeleide = self.output * (1 - self.output)
-        # print("afgeleide", afgeleide)
         self.error = afgeleide * -(target - self.output)
-        # print("error", self.error)
         return self.error
 
     def calculate_error_hiddenNeuron(self, volgendeWeights, volgendeError):
+        """Deze functie berkent de error van de neuronen in de hidden layer"""
         sumError = 0
-        # print("nextWeights", volgendeWeights)
-        # print("nextError", volgendeError)
         for i in range(len(volgendeWeights)):
             sumError += volgendeWeights[i] * volgendeError[i]
-        # print("sumError", sumError)
-        # print("output", self.output)
         afgeleide = self.output * (1 - self.output)
         self.error = afgeleide * sumError
-        # print("error", self.error)
         return self.error
 
     def calculate_gradient(self, delta):
+        """Deze functie berekent de gradient van de neuron"""
         return self.output * delta
 
     def calculate_deltaWeights(self):
+        """Deze functie berekent de delta's van de weights van de neuron"""
         for i in range(len(self.weights)):
             self.aanpassingWeights.append(self.learning_rate * self.invoer[i] * self.error)
 
     def calculate_deltaBias(self):
+        """Deze functie berekent de delta van de bias van de neuron"""
         self.aanpassingBias = self.learning_rate * self.error
         return self.aanpassingBias
 
     def update(self):
+        """Deze functie berekent de nieuwe weights en bias van de neuron"""
         self.aanpassingWeights = []
-        # print("NEURON", self.__str__())
         self.calculate_deltaWeights()
-        # print("\ndeltaWeights", self.aanpassingWeights)
         for i in range(len(self.aanpassingWeights)):
-            # print(self.weights[i], self.aanpassingWeights[i])
             self.weights[i] -= self.aanpassingWeights[i]
-            #self.weights[i] -= learning_rate * self.aanpassingWeights[i]
-            # print("newWeights", self.weights[i])
         self.bias -= self.calculate_deltaBias()
-        # print("newBias", self.bias, "\n")
 
     def __str__(self):
         """Deze functie returnt de belangrijke informatie van de neuron"""
